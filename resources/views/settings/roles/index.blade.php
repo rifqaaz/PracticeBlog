@@ -29,7 +29,7 @@
                                     <span class="badge bg-secondary text-black">{{ $permission->name }}</span>
                                     @endforeach
                                 </td>
-                                <td class="d-flex flex-row justify-content-evenly">
+                                <td class="d-flex flex-row" style="gap: 10px;">
                                     <a href="#" class="btn btn-sm btn-primary me-3" data-toggle="modal" data-target="#edit{{ $role->id }}">
                                     <i class="bi bi-pencil"></i> Edit
                                     </a>
@@ -44,7 +44,7 @@
                                     @endnotprotected
 
                                     @protected($role->name)
-                                    <span class="badge bg-warning">Protected Role</span>
+                                    <span class="btn btn-sm btn-warning disabled">Protected Role</span>
                                     @endprotected
                                 </td>
                             </tr>

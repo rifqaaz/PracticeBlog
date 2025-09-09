@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProfileController;
 
@@ -25,6 +26,10 @@ Route::post('create-post', [PostController::class, 'store'])
     ->name('posts.store');
 Route::get('posts/{post:slug}', [PostController::class, 'show'])
     ->name('posts.show');
+
+// Comments
+Route::get('/posts/{id}', [CommentController::class, 'index']);
+Route::post('/posts/{post}', [CommentController::class, 'store']);
 
  // User Management
 Route::resource('users', UserController::class);

@@ -32,7 +32,9 @@ class PostController extends Controller
             }
 
             // Pagination
-            $posts = $query->orderBy('id', 'ASC')->paginate(10);
+            $posts = $query->orderBy('id', 'ASC')
+            ->with(['comments'])
+            ->paginate(10);
 
             return response()->json([
                 'data' => [
@@ -89,6 +91,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'author_name' => 'nullable|string|max:255',
             'title'       => 'required|string|max:255',
             'body'        => 'required|string',
             'category_id' => 'required|exists:categories,id',
@@ -100,8 +103,12 @@ class PostController extends Controller
             $validated['image'] = $request->file('image')->store('posts', 'public');
         }
 
-        // Create post with user_id
-        $post = posts()->create($validated);
+        if (auth()->check()) {
+            // If user is logged in, use their name
+            $validated['author_name'] = auth()->user()->name;
+        }
+
+        $post = Post::create($validated);
 
         return response()->json([
             'message' => 'Post created successfully!',
