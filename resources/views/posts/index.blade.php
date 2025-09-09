@@ -97,12 +97,12 @@
                     <div class="card-footer d-flex justify-content-between">
                         <div class="d-flex align-items-center" style="gap: 10px;">
                             <a href="#" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#show{{ $post->id }}">View</a>
-                                <a href="#" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#edit{{ $post->id }}">Edit</a>
-                                <form class="d-inline" method="POST" action="{{ route('posts.destroy', $post) }}"
-                                    onsubmit="return confirm('Delete this post and its image permanently?');">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                                </form>
+                            <a href="#" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#edit{{ $post->id }}">Edit</a>
+                            <form class="d-inline" method="POST" action="{{ route('posts.destroy', $post) }}"
+                                onsubmit="return confirm('Delete this post and its image permanently?');">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
                         </div>
                         <!-- Toggle switch  -->
                         <form action="{{ route('posts.toggle-status', $post) }}" method="POST" class="d-flex align-items-center gap-2">
@@ -250,21 +250,52 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="card-custom">
-                        <div class="card-body">
-                        <!-- Image Section -->
-                            <div class="col-md-5 mb-4">
-                                <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('images/placeholder.jpg') }}" 
-                                        class="img-fluid rounded-start object-fit-cover" alt="{{ $post->title }}">
+                    <div class="scroll scroll-pull" data-scroll="true" data-height="500">
+                        <div class="card-custom">
+                            <div class="card-body">
+                                <!-- Image Section -->
+                                <div class="col-md-5 mb-4">
+                                    <img src="{{ $post->image ? asset('storage/' . $post->image) : asset('images/placeholder.jpg') }}" 
+                                            class="img-fluid rounded-start object-fit-cover" alt="{{ $post->title }}">
+                                </div>
+                                <!-- Post Content -->
+                                <div class="post-content">
+                                    {{  $post->body }}
+                                </div>
                             </div>
-                        <!-- Post Content -->
-                            <div class="post-content">
-                                {{  $post->body }}
+                            <div class="card-divider"></div>
+                            <div class="card-body">
+                                <h5 class="mb-3">Comments</h5>
+                                <form action="{{ route('comments.store', $post) }}" method="POST" class="mb-4">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label for="comment" class="form-label">Add a comment:</label>
+                                        <textarea class="form-control @error('comment') is-invalid @enderror" 
+                                            id="comment" name="comment" rows="3" required>{{ old('comment') }}</textarea>
+                                        @error('comment')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                                </form>
+                                @if($post->comments->count())
+                                    <ul class="list-group">
+                                        @foreach($post->comments as $comment)
+                                            <li class="list-group-item">
+                                                <strong>{{ $comment->user->name }}:</strong> {{ $comment->body }}
+                                                <br>
+                                                <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p class="text-muted">No comments yet.</p>
+                                @endif
                             </div>
-                        </div>
-                        <div class="card-footer text-muted">
-                            Created {{ $post->created_at->diffForHumans() }} <br>
-                            Approved {{ $post->approved_at?->diffForHumans() ?? 'Not yet approved' }}
+                            <div class="card-footer text-muted">
+                                Created {{ $post->created_at->diffForHumans() }} <br>
+                                Approved {{ $post->approved_at?->diffForHumans() ?? 'Not yet approved' }}
+                            </div>
                         </div>
                     </div>
                 </div>

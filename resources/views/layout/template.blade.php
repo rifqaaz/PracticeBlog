@@ -113,6 +113,7 @@
                         <!--end::Entry-->
                     </div>
                     <!--end::Content-->
+                    @include('layout.footer')
                     <!--begin::Scrolltop-->
                     <div id="kt_scrolltop" class="scrolltop">
                         <span class="svg-icon">

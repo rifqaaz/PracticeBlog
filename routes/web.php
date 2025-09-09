@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PasswordController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -59,16 +60,19 @@ Route::middleware(['auth'])->group(function () {
     Route::get('posts/{post:slug}', [PostController::class, 'show'])
         ->name('posts.show');
 
+    // Comments
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::get('/testing', function (Request $request) {
-    return response()->json([
-        'message' => 'Testing route is working!',
-        'user' => $request->user(),
-    ]);
-})->middleware('auth')->name('testing');
+// Route::get('/testing', function (Request $request) {
+//     return response()->json([
+//         'message' => 'Testing route is working!',
+//         'user' => $request->user(),
+//     ]);
+// })->middleware('auth')->name('testing');
 
 // Toggle
 Route::patch('/posts/{post}/toggle-status', [PostController::class, 'toggleStatus'])
