@@ -20,6 +20,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create Permissions
         Permission::create(['name' => 'view users']);
         Permission::create(['name' => 'edit users']);
+        Permission::create(['name' => 'edit assigned']);
 
         Permission::create(['name' => 'view posts']);
         Permission::create(['name' => 'create posts']);
@@ -29,11 +30,11 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create Roles and assign existing permissions
         $adminRole = Role::create(['name' => 'admin']);
         $adminRole->givePermissionTo([
-            'view users', 'edit users', 'view posts', 'create posts', 'edit all posts', 'delete posts'
+            'view users', 'edit users', 'view posts', 'delete posts'
         ]);
 
         $editorRole = Role::create(['name' => 'editor']);
-        $editorRole->givePermissionTo(['view posts', 'edit all posts']);
+        $editorRole->givePermissionTo(['view users', 'view posts', 'edit assigned']);
 
         $userRole = Role::create(['name' => 'user']);
         $userRole->givePermissionTo('view posts', 'create posts');
