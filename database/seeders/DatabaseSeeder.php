@@ -11,28 +11,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        
-        User::factory()->create([
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => bcrypt('longpassword'),
-            'assigned_to_editor_id' => 2, // Assuming editor with ID 2 exists
-        ])->assignRole('user');
-
-        User::factory()->create([
-            'name' => 'Jane Doe',
-            'email' => 'jj@example.com',
-            'password' => bcrypt('12345678'),
-            'assigned_to_admin_id' => 3,
-        ])->assignRole('editor');
-
-        // Create test user
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ])->assignRole('admin');
-
         // Seed categories
         $categories = [
             'Technology',
@@ -49,8 +27,15 @@ class DatabaseSeeder extends Seeder
                 'slug' => strtolower(str_replace(' ', '-', $category))
             ]);
         }
+        
+        User::factory()->create([
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+            'password' => bcrypt('longpassword'),
+            'assigned_to_editor_id' => 2,
+        ])->assignRole('user');
 
         // Create posts with random category associations
-        Post::factory(20)->create();
+        Post::factory(50)->create();
     }
 }
