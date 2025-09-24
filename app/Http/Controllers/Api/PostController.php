@@ -33,8 +33,7 @@ class PostController extends Controller
 
             // Pagination
             $posts = $query->orderBy('id', 'ASC')
-            ->with(['comments'])
-            ->paginate(10);
+            ->paginate(12);
 
             return response()->json([
                 'data' => [
@@ -55,35 +54,35 @@ class PostController extends Controller
         }
     }
 
-    public function myPosts(Request $request) 
-    {
+    // public function myPosts(Request $request) 
+    // {
 
-        $user = Auth::user(); // or $request->user();
+    //     $user = Auth::user(); // or $request->user();
 
-        $posts = $request->user()->posts()
-            ->when($request->search, function($query, $search) {
-                $query->where('title', 'like', '%' . $search . '%');
-            })
-            ->when($request->category, function($query, $category) {
-                $query->where('category_id', $category);
-            })
-            ->when($request->has('show_active'), function($query) use ($request) {
-                $query->where('is_active', $request->boolean('show_active'));
-            })
-            ->with('category')
-            ->latest()
-            ->paginate(12);
+    //     $posts = $request->user()->posts()
+    //         ->when($request->search, function($query, $search) {
+    //             $query->where('title', 'like', '%' . $search . '%');
+    //         })
+    //         ->when($request->category, function($query, $category) {
+    //             $query->where('category_id', $category);
+    //         })
+    //         ->when($request->has('show_active'), function($query) use ($request) {
+    //             $query->where('is_active', $request->boolean('show_active'));
+    //         })
+    //         ->with('category')
+    //         ->latest()
+    //         ->paginate(12);
 
-        return response()->json([
-            'data' => $posts->items(),
-            'pagination' => [
-                'current_page' => $posts->currentPage(),
-                'per_page' => $posts->perPage(),
-                'total' => $posts->total(),
-                'last_page' => $posts->lastPage(),
-            ]
-        ], 200); // HTTP 200 OK
-    }
+    //     return response()->json([
+    //         'data' => $posts->items(),
+    //         'pagination' => [
+    //             'current_page' => $posts->currentPage(),
+    //             'per_page' => $posts->perPage(),
+    //             'total' => $posts->total(),
+    //             'last_page' => $posts->lastPage(),
+    //         ]
+    //     ], 200); // HTTP 200 OK
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -119,17 +118,18 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($slug)
     {
         try{
 
-            $posts = Post::where('is_active', 1)
-            ->orderBy('id', 'ASC')
-            ->where('id', $id)->first();
+            $post = Post::where('is_active', 1)
+            ->where('slug', $slug)
+            ->with(['comments'])
+            ->first();
 
             return response()->json([
                 'data' => [
-                    'posts' => $posts,
+                    'post' => $post,
                 ]
             ], 200);
 

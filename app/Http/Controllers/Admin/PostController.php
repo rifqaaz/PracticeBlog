@@ -62,7 +62,7 @@ class PostController extends Controller
             ->paginate(12);
 
         $categories = Category::withCount(['posts' => function($query) {
-            $query->active(); // Count only active posts
+            $query->where('is_active', false); // Count only inactive posts
         }])->get();
 
         // Return the view with the posts

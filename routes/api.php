@@ -24,7 +24,7 @@ Route::get('posts', [PostController::class, 'index'])
     ->name('posts.index');
 Route::post('create-post', [PostController::class, 'store'])
     ->name('posts.store');
-Route::get('posts/{post:slug}', [PostController::class, 'show'])
+Route::get('posts/{slug}', [PostController::class, 'show'])
     ->name('posts.show');
 
 // Comments

@@ -156,7 +156,7 @@
         <script src="{{ asset('assets/js/pages/widgets.js') }}"></script>
         <!--end::Page Scripts-->
         @stack('scripts')
-        <script type="text/javascript">
+        {{-- <script type="text/javascript">
         (function () {
             var options = {
                 whatsapp: "+2349036879449", // WhatsApp number
@@ -168,7 +168,7 @@
             s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
             var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
         })();
-    </script>
+    </script> --}}
     </body>
     <!--end::Body-->
 </html>
