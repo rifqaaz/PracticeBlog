@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -27,15 +28,18 @@ class CommentController extends Controller
                 'author_name' => 'required|string|max:255',
                 'comment' => 'required|string|max:1000',
             ]);
+            Log::info('Validated Data: ', $validated);
 
             $post = Post::findOrFail($id);
+            Log::info('Post Found: ', $post->toArray());
 
             $comments = $post->comments()->create([
                 'author_name' => $validated['author_name'],
                 'body'    => $validated['comment'],
                 'user_id' => auth()->id(),
                 'post_id' => $id,
-            ]); log($comments);
+            ]);
+            Log::info('Comment Created: ', $comments->toArray());
 
             return response()->json([
                 'message' => 'Comment added successfully!',
