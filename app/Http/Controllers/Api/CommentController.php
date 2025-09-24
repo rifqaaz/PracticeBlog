@@ -35,7 +35,7 @@ class CommentController extends Controller
                 'body'    => $validated['comment'],
                 'user_id' => auth()->id(),
                 'post_id' => $id,
-            ]);
+            ]); log($comments);
 
             return response()->json([
                 'message' => 'Comment added successfully!',
