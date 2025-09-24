@@ -29,7 +29,7 @@ Route::get('posts/{slug}', [PostController::class, 'show'])
 
 // Comments
 Route::get('/posts/{id}', [CommentController::class, 'index']);
-Route::post('/posts/{post}', [CommentController::class, 'store']);
+Route::post('/posts/{id}', [CommentController::class, 'store']);
 
  // User Management
 Route::resource('users', UserController::class);

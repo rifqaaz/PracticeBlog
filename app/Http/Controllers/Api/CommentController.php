@@ -20,22 +20,44 @@ class CommentController extends Controller
     }
 
     // Store a comment for a post
-    public function store(Request $request, Post $post)
+    public function store(Request $request, $id)
     {
-        $validated = $request->validate([
-            'author_name' => 'required|string|max:255',
-            'comment' => 'required|string|max:1000',
-        ]);
+        try {
+            $validated = $request->validate([
+                'author_name' => 'required|string|max:255',
+                'comment' => 'required|string|max:1000',
+            ]);
 
-        $comments = $post->comments()->create([
-            'author_name' => $validated['author_name'],
-            'body'    => $validated['comment'],
-            'user_id' => auth()->id(), // works if user is logged in via API
-        ]);
+            $post = Post::findOrFail($id);
 
-        return response()->json([
-            'message' => 'Comment added successfully!',
-            'data'    => $comments
-        ], 201);
+            $comments = $post->comments()->create([
+                'author_name' => $validated['author_name'],
+                'body'    => $validated['comment'],
+                'user_id' => auth()->id(),
+                'post_id' => $id,
+            ]);
+
+            return response()->json([
+                'message' => 'Comment added successfully!',
+                'data'    => $comments
+            ], 201);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+            
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Post not found'
+            ], 404);
+            
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create comment',
+                'error' => env('APP_DEBUG') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
     }
 }
