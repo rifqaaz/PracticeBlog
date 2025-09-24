@@ -36,7 +36,7 @@ class CommentController extends Controller
             $comments = $post->comments()->create([
                 'author_name' => $validated['author_name'],
                 'body'    => $validated['comment'],
-                'user_id' => auth()->id(),
+                'user_id' => auth()->check() ? auth()->id() : null,
                 'post_id' => $id,
             ]);
             Log::info('Comment Created: ', $comments->toArray());
